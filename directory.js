@@ -1,29 +1,31 @@
-import { fs } from "fs";
-import File from "./file.js";
+const fs = require("fs");
+const File = require("./file");
+const path = require("path");
 
 class Directory {
-  constructor(name, path) {
+  constructor(name, _path) {
+    // create an absolute path from the path argument
+    const absPath = path.resolve(_path);
+
     // check path exists
-    if (!fs.existsSync(path)) {
+    if (!fs.existsSync(absPath)) {
       throw new Error("Path does not exist");
     }
 
     // set the path and name
-    this.path = path;
+    this.path = absPath;
 
-    // set the files as an empty array
+    // set the files and subdirectories as empty arrays
     this.files = [];
+    this.subDirectories = [];
 
-    // get all files from the path and create a new file object for each
-    fs.readdirSync(path).forEach((file) => {
-      // check if the file is a directory if it is create a new directory object and push in into the files array
-      if (fs.lstatSync(`${path}/${file}`).isDirectory()) {
-        this.files.push(new Directory(file, `${path}/${file}`));
-        return;
+    // get all files from the path and create a new file or directory object for each
+    fs.readdirSync(this.path).forEach((file) => {
+      if (fs.lstatSync(`${this.path}/${file}`).isDirectory()) {
+        this.subDirectories.push(new Directory(file, `${this.path}/${file}`));
+      } else {
+        this.files.push(new File(`${this.path}/${file}`));
       }
-
-      // push the new file object to the files array
-      this.files.push(new File(`${path}/${file}`));
     });
 
     // set the name
@@ -31,14 +33,19 @@ class Directory {
   }
 
   toJson() {
-    // return the directory object as json
+    // map the files and subdirectories arrays to JSON
+    let filesJson = this.files.map((file) => file.toJson());
+    let subDirectoriesJson = this.subDirectories.map((directory) =>
+      directory.toJson()
+    );
+
     return {
       name: this.name,
       path: this.path,
-      // call the toJson method on each file object
-      files: this.files.forEach((file) => file.toJson()),
+      files: filesJson,
+      subDirectories: subDirectoriesJson,
     };
   }
 }
 
-export default Directory;
+module.exports = Directory;

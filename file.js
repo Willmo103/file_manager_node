@@ -1,6 +1,12 @@
+const fs = require("fs");
+
 class File {
   constructor(path) {
-    this.filename = path.split("/").pop();
+    if (!path.split("/").pop()) {
+      this.filename = path;
+    } else {
+      this.filename = path.split("/").pop();
+    }
     this.path = path;
   }
 
@@ -10,6 +16,13 @@ class File {
       path: this.path,
     };
   }
+
+  delete() {
+    fs.rm(this.path, (err) => {
+      if (err) return false;
+    });
+    return true;
+  }
 }
 
-export default File;
+module.exports = File;
