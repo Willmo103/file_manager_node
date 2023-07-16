@@ -22,53 +22,43 @@ afterEach(() => {
 });
 
 describe("Directory", () => {
-  //   it("should throw an error if the path does not exist", () => {
-  //     expect(() => new Directory("test", "./test")).toThrow(
-  //       Error("Path does not exist")
-  //     );
-  //   });
+  it("should throw an error if the path does not exist", () => {
+    expect(() => new Directory("test", "./test")).toThrow(
+      Error("Path does not exist")
+    );
+  });
 
   it(".toJson method should return a json object", () => {
+    // create the test object from the created test path
     const testDir = new Directory("test", testDirPath);
+
+    //call the toJson method of the directory object
     const jsonData = testDir.toJson();
-    let i = 0;
-    for (key in jsonData) {
-      console.log(i);
-      console.log(key, jsonData[key]);
-      if (key == "files") {
-        j = 0;
-        for (key2 in jsonData[key]) {
-          console.log(key2, jsonData[key][key2]);
-          console.log(j);
-          if (key2 == "files") {
-            k = 0;
-            for (key3 in jsonData[key]) {
-              console.log(key3, jsonData[key][key2]);
-              console.log(k);
-              k++;
-            }
-          }
-          j++;
-        }
-      }
-      i++;
-    }
+
+    // check the "name"
     expect(jsonData.name).toBe("test");
-    // console.log("Name:", jsonData.name);
 
-    // expect(jsonData.path).toBe(testDirPath);
-    // console.log("Path", jsonData.path);
+    // check the path
+    expect(jsonData.path).toBe(testDirPath);
 
-    // expect(jsonData.files.length).toBe(2);
-    // console.log("Files length:", jsonData.files.length);
+    // number of files in the "files" array
+    expect(jsonData.files.length).toBe(1);
 
-    // expect(jsonData.files[0].filename).toBe("subfolder");
-    // console.log("Files [0]:", jsonData.files[0]);
+    // check the files in the "files" array for "filename" and "path"
+    expect(jsonData.files[0].filename).toBe("test.txt");
+    expect(jsonData.files[0].path).toBe(`${testDirPath}/test.txt`);
 
-    // expect(jsonData.files[1].filename).toBe("test.txt");
-    // console.log("Files [1]:", jsonData.files[1]);
+    // check the directories in the "subdirectories" array
+    expect(jsonData.subDirectories.length).toBe(1);
 
-    // expect(jsonData.files[1].files[0].filename).toBe("test.txt");
-    // console.log("Files [1] nested file:", jsonData.files[1].files);
+    // check the "name" and "path" of the object in the "subdirectories" array
+    expect(jsonData.subDirectories[0].name).toBe("subfolder");
+    expect(jsonData.subDirectories[0].path).toBe(`${testDirPath}\\subfolder`);
+
+    // check the length of the "files" array of the object in the "subdirectories" array
+    expect(jsonData.subDirectories[0].files.length).toBe(1);
+
+    // check the "name" and "path" of the object in the "files" array of the object in the "subdirectories" array
+    expect(jsonData.subDirectories[0].files[0].filename).toBe("test.txt");
   });
 });
