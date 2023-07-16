@@ -31,29 +31,31 @@ describe("Directory", () => {
   it(".toJson method should return a json object", () => {
     // create the test object from the created test path
     const testDir = new Directory("test", testDirPath);
-
+    console.log(testDir)
     //call the toJson method of the directory object
     const jsonData = testDir.toJson();
-
+    console.log("json:", jsonData)
     // check the "name"
-    expect(jsonData.name).toBe("test");
+    expect(jsonData.filename).toBe("test");
 
     // check the path
-    expect(jsonData.path).toBe(testDirPath);
+    expect(jsonData.filepath).toBe(testDirPath);
 
     // number of files in the "files" array
     expect(jsonData.files.length).toBe(1);
 
     // check the files in the "files" array for "filename" and "path"
     expect(jsonData.files[0].filename).toBe("test.txt");
-    expect(jsonData.files[0].path).toBe(`${testDirPath}/test.txt`);
+    expect(jsonData.files[0].filepath).toBe(path.resolve(testDirPath, "test.txt"));
 
     // check the directories in the "subdirectories" array
     expect(jsonData.subDirectories.length).toBe(1);
 
     // check the "name" and "path" of the object in the "subdirectories" array
-    expect(jsonData.subDirectories[0].name).toBe("subfolder");
-    expect(jsonData.subDirectories[0].path).toBe(`${testDirPath}\\subfolder`);
+    expect(jsonData.subDirectories[0].filename).toBe("subfolder");
+    expect(jsonData.subDirectories[0].filepath).toBe(
+      path.resolve(testDirPath, "subfolder")
+    );
 
     // check the length of the "files" array of the object in the "subdirectories" array
     expect(jsonData.subDirectories[0].files.length).toBe(1);

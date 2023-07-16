@@ -1,35 +1,29 @@
 const fs = require("fs");
 const File = require("./file");
-const path = require("path");
+const IO = require("./io");
 
-class Directory {
-  constructor(name, _path) {
-    // create an absolute path from the path argument
-    const absPath = path.resolve(_path);
+class Directory extends IO {
+  constructor(filename, filepath) {
+    // call the parent constructor to set the name and filepath properties
+    super(filepath);
 
-    // check path exists
-    if (!fs.existsSync(absPath)) {
-      throw new Error("Path does not exist");
-    }
-
-    // set the path and name
-    this.path = absPath;
+    // set the filename
+    this.filename = filename
 
     // set the files and subdirectories as empty arrays
     this.files = [];
     this.subDirectories = [];
 
     // get all files from the path and create a new file or directory object for each
-    fs.readdirSync(this.path).forEach((file) => {
-      if (fs.lstatSync(`${this.path}/${file}`).isDirectory()) {
-        this.subDirectories.push(new Directory(file, `${this.path}/${file}`));
+    fs.readdirSync(this.filepath).forEach((file) => {
+      if (fs.lstatSync(`${this.filepath}/${file}`).isDirectory()) {
+        this.subDirectories.push(
+          new Directory(file, `${this.filepath}/${file}`)
+        );
       } else {
-        this.files.push(new File(`${this.path}/${file}`));
+        this.files.push(new File(`${this.filepath}/${file}`));
       }
     });
-
-    // set the name
-    this.name = name;
   }
 
   toJson() {
@@ -40,8 +34,8 @@ class Directory {
     );
 
     return {
-      name: this.name,
-      path: this.path,
+      filename: this.filename,
+      filepath: this.filepath,
       files: filesJson,
       subDirectories: subDirectoriesJson,
     };

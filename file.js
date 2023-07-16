@@ -1,28 +1,25 @@
-const fs = require("fs");
+const fs = require('fs')
+const IO = require('./io')
 
-class File {
-  constructor(path) {
-    if (!path.split("/").pop()) {
-      this.filename = path;
+class File extends IO {
+  constructor(filepath) {
+    super(filepath)
+
+    // parse the filename from the filepath
+    if (!this.filepath.split("\\").pop()) {
+      this.filename = this.filepath;
     } else {
-      this.filename = path.split("/").pop();
+      this.filename = this.filepath.split("\\").pop();
     }
-    this.path = path;
   }
 
   toJson() {
     return {
       filename: this.filename,
-      path: this.path,
+      filepath: this.filepath,
     };
   }
 
-  delete() {
-    fs.rm(this.path, (err) => {
-      if (err) return false;
-    });
-    return true;
-  }
 }
 
 module.exports = File;
