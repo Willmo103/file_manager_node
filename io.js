@@ -1,8 +1,26 @@
 const path = require("path");
 const fs = require("fs");
 
-
+/**
+ * @class IO
+ * @classdesc Abstract class that represents a file or directory.
+ * @property {string} filepath - The absolute path to the file or directory.
+ * @property {string} filename - The name of the file or directory.
+ *
+ */
 class IO {
+    /**
+     * @constructor
+     * @param {string} filepath - The absolute path to the file or directory.
+     * @throws {TypeError} - If the class is instantiated directly.
+     * @throws {Error} - If the path does not exist.
+     *
+     * @example <caption>Example usage of constructor.</caption>
+     * class YourClass extends IO {
+     *  constructor(filepath) {
+     *     super(filepath);
+     * }
+     */
     constructor(filepath) {
         // block this class from being instantiated from the constructor
         if (new.target == IO) {
