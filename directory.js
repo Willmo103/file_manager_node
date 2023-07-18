@@ -1,6 +1,7 @@
 const fs = require("fs");
 const File = require("./file");
 const IO = require("./io");
+const path = require('path')
 
 class Directory extends IO {
   constructor(filename, filepath) {
@@ -26,19 +27,23 @@ class Directory extends IO {
     });
   }
 
-  toJson() {
+  toJson(save = false, loc = `${path.resolve(__dirname, this.filename + ".json")}`) {
     // map the files and subdirectories arrays to JSON
     let filesJson = this.files.map((file) => file.toJson());
     let subDirectoriesJson = this.subDirectories.map((directory) =>
       directory.toJson()
     );
 
-    return {
+    const output = {
       filename: this.filename,
       filepath: this.filepath,
       files: filesJson,
       subDirectories: subDirectoriesJson,
     };
+    if (save) {
+      fs.writeFileSync(loc, JSON.stringify(output))
+    }
+    return output
   }
 }
 

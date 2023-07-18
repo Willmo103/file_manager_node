@@ -31,11 +31,10 @@ describe("Directory", () => {
   it(".toJson method should return a json object", () => {
     // create the test object from the created test path
     const testDir = new Directory("test", testDirPath);
-    console.log(testDir)
     //call the toJson method of the directory object
     const jsonData = testDir.toJson();
-    console.log("json:", jsonData)
     // check the "name"
+    console.log(jsonData)
     expect(jsonData.filename).toBe("test");
 
     // check the path
@@ -63,4 +62,11 @@ describe("Directory", () => {
     // check the "name" and "path" of the object in the "files" array of the object in the "subdirectories" array
     expect(jsonData.subDirectories[0].files[0].filename).toBe("test.txt");
   });
+
+  it(".toJson with passed with the save flag should save the json to a file", () => {
+    const testDir = new Directory("test", testDirPath)
+    testDir.toJson(true)
+    expect(fs.existsSync("./test.json")).toBeTrue();
+    fs.rmSync("./test.json")
+  })
 });
