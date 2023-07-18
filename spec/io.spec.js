@@ -6,7 +6,7 @@ const setup = require("./support/helpers");
 const IO = require("../io");
 
 const testDirPath = path.resolve(setup());
-const devDirPath = path.resolve(__dirname, "..");
+const devDirPath = path.resolve(__dirname, "dev");
 
 describe("IO - via File and Directory classes", () => {
 
@@ -85,7 +85,7 @@ describe("IO - via File and Directory classes", () => {
             // check if the file was created
             expect(fs.existsSync("./json_files/test.json")).toBeTrue();
 
-            // check the contents of the file
+            // clean up after the test
             fs.rmSync("./json_files/test.json")
         });
 
