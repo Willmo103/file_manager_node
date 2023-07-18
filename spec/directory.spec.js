@@ -34,7 +34,6 @@ describe("Directory", () => {
     //call the toJson method of the directory object
     const jsonData = testDir.toJson();
     // check the "name"
-    console.log(jsonData)
     expect(jsonData.filename).toBe("test");
 
     // check the path
@@ -66,7 +65,21 @@ describe("Directory", () => {
   it(".toJson with passed with the save flag should save the json to a file", () => {
     const testDir = new Directory("test", testDirPath)
     testDir.toJson(true)
-    expect(fs.existsSync("./test.json")).toBeTrue();
-    fs.rmSync("./test.json")
+    expect(fs.existsSync("./json_files/test.json")).toBeTrue();
+    fs.rmSync("./json_files/test.json")
+  })
+
+  it("Delete method deletes file and responds with true", async () => {
+    const testDir = new Directory("test", testDirPath)
+    let deleted;
+    try {
+      deleted = await testDir.delete()
+    } catch (error) {
+      console.log(error)
+    }
+    expect(deleted).toBeTrue()
+    expect(fs.existsSync(testDirPath)).toBeFalse()
+    // recreate the test dir so the "afterEach()" function won't throw an error.
+    fs.mkdirSync("../test")
   })
 });

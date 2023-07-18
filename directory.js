@@ -27,19 +27,22 @@ class Directory extends IO {
     });
   }
 
-  toJson(save = false, loc = `${path.resolve(__dirname, this.filename + ".json")}`) {
+  toJson(save = false, loc = `${path.resolve(__dirname, "json_files", this.filename + ".json")}`) {
     // map the files and subdirectories arrays to JSON
     let filesJson = this.files.map((file) => file.toJson());
     let subDirectoriesJson = this.subDirectories.map((directory) =>
       directory.toJson()
     );
 
+    // build the json object
     const output = {
       filename: this.filename,
       filepath: this.filepath,
       files: filesJson,
       subDirectories: subDirectoriesJson,
     };
+
+    // save the file to the "json_files" dir if save flag is passed.
     if (save) {
       fs.writeFileSync(loc, JSON.stringify(output))
     }
