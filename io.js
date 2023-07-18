@@ -1,7 +1,6 @@
 const path = require("path");
 const fs = require("fs");
-const Directory = require("./directory");
-const File = require("./file");
+
 
 class IO {
     constructor(filepath) {
@@ -46,22 +45,27 @@ class IO {
      * @returns {Promise} - A Promise that resolves to the value returned by the callback function. If an error occurs during copying, the Promise is rejected with an Error object.
      */
     async copy(dest, callback) {
-        if (!(this instanceof File)) {
+        const Directory = require("./directory");
+        const File = require("./file");
+        if (this instanceof Directory) {
             return fs.promises.cp(this.filepath, dest, { recursive: true })
                 .then(() => Promise.resolve(callback(dest)))
                 .catch((err) => {
                     console.log(err);
                     return Promise.reject(err);
                 });
-        } else if (this instanceof Directory) {
+        } else if (this instanceof File) {
             return fs.promises.cp(this.filepath, dest)
                 .then(() => Promise.resolve(callback(dest)))
                 .catch((err) => {
                     console.log(err);
                     return Promise.reject(err);
                 });
+        } else {
+            throw new Error('Object must be instance of File or Directory');
         }
     }
+
 
     /**
      * #### Inherited from IO class
