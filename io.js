@@ -61,7 +61,7 @@ class IO {
      * @returns {Promise} - A Promise that resolves to the new location of the file or directory. If an error occurs during moving, the Promise is rejected with an Error object.
      */
     async move(dest, callback) {
-        return fs.promises.rename(this.filepath, dest)
+        return fs.promises.rename(this.filepath, dest, { overwrite: true, recursive: true })
             .then(() => {
                 this.filepath = dest;
                 callback(dest);
