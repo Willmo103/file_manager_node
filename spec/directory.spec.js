@@ -45,6 +45,7 @@ describe("Directory", () => {
     // check the files in the "files" array for "filename" and "path"
     expect(jsonData.files[0].filename).toBe("test.txt");
     expect(jsonData.files[0].filepath).toBe(path.resolve(testDirPath, "test.txt"));
+    expect(jsonData.files[0].extension).toBe("txt");
 
     // check the directories in the "subdirectories" array
     expect(jsonData.subDirectories.length).toBe(1);
@@ -60,6 +61,10 @@ describe("Directory", () => {
 
     // check the "name" and "path" of the object in the "files" array of the object in the "subdirectories" array
     expect(jsonData.subDirectories[0].files[0].filename).toBe("test.txt");
+    expect(jsonData.subDirectories[0].files[0].filepath).toBe(
+      path.resolve(testDirPath, "subfolder", "test.txt")
+    );
+    expect(jsonData.subDirectories[0].files[0].extension).toBe("txt");
   });
 
   it(".toJson with passed with the save flag should save the json to a file", () => {

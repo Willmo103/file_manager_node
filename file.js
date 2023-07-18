@@ -11,12 +11,22 @@ class File extends IO {
     } else {
       this.filename = this.filepath.split("\\").pop();
     }
+
+    // parse the extension from the filename
+    let extension = this.filename.split(".").pop();
+
+    if (extension === this.filename) {
+      this.extension = null;
+    } else {
+      this.extension = extension;
+    }
   }
 
   toJson() {
     return {
       filename: this.filename,
       filepath: this.filepath,
+      extension: this.extension,
     };
   }
 
